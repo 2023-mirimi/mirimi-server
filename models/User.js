@@ -1,31 +1,51 @@
-const dbConfig = require("../db/config.js");
-const oracledb = require("oracledb");
-oracledb.autoCommit = true;
+const connection = require("../db/config.js");
+const User = {};
 
-async function run() {
-  let binds = {};
-  let options = {
-    outFormat: oracledb.OUT_FORMAT_OBJECT, // query result format
-  };
+User.findById = (userId) => {
+    return new Promise((resolve, reject) => {
+        connection.connect();
+        let sql = `SELECT * FROM users WHERE student_id = ${userId}`;
+        connection.query(sql,(row, err) => {
+            if(row) {
+                resolve(row);
+            } else {
+                reject(err);
+            }
+            // connection.end();
+        });
+    })
+};
+User.login = (email, pw) => {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT * FROM users WHERE email = '${email}' AND password = '${pw}';`;
+        connection.query(sql,(err, row) => {
+            if(err) {
+                console.log('모델 문제')
+                reject(err);
+            } else {
+                // console.log('결과:', row[0]);
+                // if(row.length == 0) row = "fail";
+                resolve(row);
+            }
+        });
+    })
+    connection.end();
+};
 
-  try {
-    // const connection = await oracledb.getConnection(dbConfig);
-    await oracledb
-      .getConnection({
-        connectString: "localhost:1521/xe",
-        user: dbConfig.user,
-        password: dbConfig.password,
-      })
-      .then((conn) => {
-        const result = conn.execute("SELECT * FROM POST2", binds, options);
-        console.log(result.rows[0]);
-      })
-      .catch((err) => {
-        console.log("db 연결 실패", err);
-      });
-  } catch (error) {
-    console.log(error);
-  }
-}
+module.exports = User;
+// module.exports = async function showUser(userId) {
+//     try {
+//         connection.connect();
+//         let sql = `SELECT * FROM users WHERE student_id = ${userId}`;
+//         connection.query(sql,(err, row) => {
+//             if(err){
+//                 console.log(err);
+//             }
+//             console.log(row[0]);
+//             connection.end();
+//         })
+//     } catch (err) {
+//         console.log('showUser() 실패',err);
+//     }
+// }
 
-run();
