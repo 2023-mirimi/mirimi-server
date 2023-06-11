@@ -1,9 +1,12 @@
-const oracledb = require('oracledb');
-const dotenv = require('dotenv');
-dotenv.config();
+const mysql = require('mysql');
+const path = require('path');
 
-module.exports = {
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    connectString: process.env.HOST,
-};
+const connection = mysql.createConnection({
+    host     : process.env.DB_HOST,
+    port: '3306',
+    user     : 'mirimi',
+    password : '1234',
+    database : 'mirimi'
+});
+
+module.exports = connection;
