@@ -1,54 +1,18 @@
 const express = require("express");
 const app = express();
+const bodyParser = require('body-parser');
 const dotenv = require("dotenv"); //.env 파일에 접근 가능한 모듈
+const cors = require('cors');
 dotenv.config();
+const accountRouter = require('./routes/account');
 
-const oracledb = require("oracledb");
-const dbConfig = require("./db/config.js");
+app.use(express.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use(cors());
+app.use(express.json());
+app.set('port', process.env.port);
+app.use('/account', accountRouter);
 
-// 라우터 폴더 분리 따로 -> 진이가 한대~!~!~!~
-app.listen(3000, () => {
-  console.log("Start Sever : localhost:3000");
+app.listen(app.get('port'), () => {
+  console.log("Start Sever : localhost:",app.get('port'));
 });
-
-app.get("/", function (req, res) {
-  res.render("index.html");
-});
-
-app.get("/db", function (req, res) {
-  // DB Select
-  selectDatabase();
-
-  // 화면에 보여줄 txt
-  res.send("연결이다!!!!!!!");
-});
-
-// DB Select
-async function selectDatabase() {
-  console.log("!!!!! db conenction !!!!!");
-  console.log(dbConfig.user);
-  console.log(dbConfig.password);
-
-  let connection = await oracledb.getConnection(dbConfig);
-
-  let binds = {};
-  let options = {
-    outFormat: oracledb.OUT_FORMAT_OBJECT, // query result format
-  };
-
-  console.log("!!!!! db select !!!!!");
-
-  let result = await connection.execute("select * from POST2", binds, options);
-
-  console.log("!!!!! db response !!!!!");
-  console.log(result.rows[0]);
-
-  console.log("!!!!! db close !!!!!");
-  await connection.close();
-}
-
-function init() {
-  oracledb.initOracleClient({ libDir: "" });
-}
-
-init();
