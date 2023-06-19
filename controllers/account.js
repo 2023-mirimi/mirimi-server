@@ -6,7 +6,7 @@ module.exports.login = async (req, res) => {
         // const stduentID = req.body.stduent_id;
         const password = req.body.pw;
         const data =  await User.login(email, password);
-        console.log(data);
+        // console.log(data);
         if(data.length == 0){ //로그인 실패
             return res.json(false);
         } else { //로그인 성공
