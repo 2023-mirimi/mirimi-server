@@ -1,6 +1,7 @@
 -- user : mirimi, password : 1234, db : mirimi
 use mirimi;
 DESC users;
+DROP TABLE users;
 CREATE TABLE users(
 	user_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name NVARCHAR(4) NOT NULL,
@@ -12,7 +13,9 @@ CREATE TABLE users(
     class INT,
     num INT
 );
-
+USE mirimi;
+ALTER TABLE posts MODIFY upload_date VARCHAR(255) NOT NULL;
+SELECT * FROM posts;
 CREATE TABLE posts(
 	post_id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -21,7 +24,7 @@ CREATE TABLE posts(
     category VARCHAR(8),
     content NVARCHAR(255) NOT NULL,
     img_url VARCHAR(255) DEFAULT NULL,
-    upload_date DATETIME NOT NULL,
+    upload_date VARCHAR(255) NOT NULL,
     post_views INT DEFAULT 0,
     likes INT DEFAULT 0,
 	PRIMARY KEY(post_id),
