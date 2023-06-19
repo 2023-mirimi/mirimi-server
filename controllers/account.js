@@ -10,7 +10,10 @@ module.exports.login = async (req, res) => {
         if(data.length == 0){ //로그인 실패
             return res.json(false);
         } else { //로그인 성공
-            return res.status(200).json(data[0]);
+            // res.redirect
+            req.session.user = data[0];
+            req.session.save();
+            return res.status(200).json(req.session.user);
         }
     } catch(err){
         console.log('컨트롤러 실패:', err)
