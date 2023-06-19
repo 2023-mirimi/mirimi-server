@@ -41,5 +41,27 @@ Post.getPost = (postID) => {
         })
     })
 }
+Post.getReplyAll = (postID) => {
+    return new Promise((resolve, reject) => {
+        let sql = 'SELECT * FROM reply WHERE post_id = ?';
+        conn.query(sql, postID, (err, rows) => {
+            if(err){
+                reject(err);
+            } else {
+                resolve(rows)
+            }
+        })
+    })
+}
+Post.addReply = (reply) => {
+    return new Promise((resolve, reject) => {
+        let sql = 'INSERT INTO reply (post_id, nickname, reply_content, reply_date) VALUES(?,?,?,?)';
+        //[reply.post_id, reply.nickname, reply.reply_content, reply.reply_date]
+        conn.query(sql, [reply.post_id, reply.nickname, reply.reply_content, reply.reply_date], (err, res) => {
+            if(err) reject(err);
+            else resolve(res);
+        })
+    })
+}
 
 module.exports = Post;
