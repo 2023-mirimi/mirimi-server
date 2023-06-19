@@ -15,7 +15,7 @@ User.findById = (userId) => {
         });
     })
 };
-User.login = (email, pw) => {
+User.login = async (email, pw) => {
     return new Promise((resolve, reject) => {
         let sql = `SELECT * FROM users WHERE email = '${email}' AND password = '${pw}';`;
         connection.query(sql,(err, row) => {

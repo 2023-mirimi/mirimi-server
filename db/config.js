@@ -1,12 +1,16 @@
 const mysql = require('mysql');
 const path = require('path');
-
+console.log(process.env.DB_HOST)
 const connection = mysql.createConnection({
     host     : process.env.DB_HOST,
-    port: '3306',
-    user     : 'mirimi',
-    password : '1234',
-    database : 'mirimi'
+    port: process.env.DB_PORT,
+    user     : process.env.DB_USER,
+    password : process.env.DB_PASSWORD,
+    database : process.env.DB_DATABASE
 });
-
+// host     : process.env.DB_HOST,
+//     port: process.env.PORT,
+//     user     : process.env.DB_USER,
+//     password : process.env.DB_PASSWORD,
+//     database : process.env.DB_DATABASE
 module.exports = connection;
