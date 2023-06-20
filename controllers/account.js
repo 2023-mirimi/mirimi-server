@@ -20,3 +20,13 @@ module.exports.login = async (req, res) => {
         return res.json(err);
     }
 }
+
+module.exports.getUser = async (req, res) => {
+    try {
+        const user = req.session.user;
+        console.log(user);
+        res.json(user);
+    } catch (error) {
+        console.log('유저 정보 가져오기 실패 -> ', error);
+    }
+}
