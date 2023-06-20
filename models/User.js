@@ -34,13 +34,18 @@ User.updateUser = async (userId, nickname, url) => {
     return new Promise((resolve, reject) => {
         let sql = 'UPDATE users SET nickname = ? , img WHERE user_id = ?';
         connection.query(sql, [userId, nickname, url], (err, res) => {
-            if(err) reject(err);
-            else resolve(res);
-        })
-
-        // function queryCallback(err, res) {
-            
-        // }
+            if(err) { 
+                reject(err);
+            }else{
+                connection.query('SELECT * FROM users  WHERE user_id = ?', userId, (err, row) => {
+                    if(err){
+                        reject(err);
+                    } else {
+                        resolve(row);
+                    }
+                });
+            } 
+        });
     })
 }
 

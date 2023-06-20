@@ -57,10 +57,17 @@ module.exports.editUser = async (req, res) => {
             },
         });
         upload.done();
+        
         let img_url = `https://s3.amazonaws.com/${process.env.AWS_BUCKET}/profile/user_${userId}.png`;
-        const result = await User.updateUser(userId, nickname, img_url);
+        
+        await User.updateUser(userId, nickname, img_url)
+            .then(row => {
+                //유저정보 리턴
+                res.status(200).json(row[0]);
+            }).catch(err => {
+                res.status(500).json(err);
+            })
         console.log('프로필 업데이트 성공!!', result)
-        res.status(200).json({ message: "ok", url: img_url, nickname: nickname });
 
     } catch (error) {
         res.json(error);
