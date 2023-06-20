@@ -52,13 +52,13 @@ module.exports.editUser = async (req, res) => {
             params: {
               Bucket: process.env.AWS_BUCKET,
               Key: `profile/user_${userId}.png`,
-              Body: file.buffer,
-              ContentType: file.mimetype,
+              Body: img.buffer,
+              ContentType: img.mimetype,
             },
         });
         upload.done();
         let img_url = `https://s3.amazonaws.com/${process.env.AWS_BUCKET}/profile/user_${userId}.png`;
-        res.status(200).send({ message: "ok" })
+        res.status(200).send({ message: "ok", url: img_url, nickname: nickname });
 
     } catch (error) {
         res.json(error);
