@@ -45,8 +45,8 @@ module.exports.getUser = async (req, res) => {
 module.exports.editUser = async (req, res) => {
     try {
         const nickname = req.body.nickname;
+        const img = req.file;
         const userId = req.session.user.user_id;
-        const img = req.body.file;
         const upload = new Upload({
             client: client,
             params: {
