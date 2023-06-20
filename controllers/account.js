@@ -58,7 +58,9 @@ module.exports.editUser = async (req, res) => {
         });
         upload.done();
         let img_url = `https://s3.amazonaws.com/${process.env.AWS_BUCKET}/profile/user_${userId}.png`;
-        res.status(200).send({ message: "ok", url: img_url, nickname: nickname });
+        const result = await User.updateUser(userId, nickname, img_url);
+        console.log('프로필 업데이트 성공!!', result)
+        res.status(200).json({ message: "ok", url: img_url, nickname: nickname });
 
     } catch (error) {
         res.json(error);

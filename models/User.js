@@ -1,9 +1,9 @@
 const connection = require("../db/config.js");
 const User = {};
+connection.connect();
 
 User.findById = (userId) => {
     return new Promise((resolve, reject) => {
-        connection.connect();
         let sql = `SELECT * FROM users WHERE student_id = ${userId}`;
         connection.query(sql,(row, err) => {
             if(row) {
@@ -11,7 +11,6 @@ User.findById = (userId) => {
             } else {
                 reject(err);
             }
-            // connection.end();
         });
     })
 };
@@ -29,23 +28,20 @@ User.login = async (email, pw) => {
             }
         });
     })
-    connection.end();
 };
 
-module.exports = User;
-// module.exports = async function showUser(userId) {
-//     try {
-//         connection.connect();
-//         let sql = `SELECT * FROM users WHERE student_id = ${userId}`;
-//         connection.query(sql,(err, row) => {
-//             if(err){
-//                 console.log(err);
-//             }
-//             console.log(row[0]);
-//             connection.end();
-//         })
-//     } catch (err) {
-//         console.log('showUser() 실패',err);
-//     }
-// }
+User.updateUser = async (userId, nickname, url) => {
+    return new Promise((resolve, reject) => {
+        let sql = 'UPDATE users SET nickname = ? , img WHERE user_id = ?';
+        connection.query(sql, [userId, nickname, url], (err, res) => {
+            if(err) reject(err);
+            else resolve(res);
+        })
 
+        // function queryCallback(err, res) {
+            
+        // }
+    })
+}
+
+module.exports = User;
