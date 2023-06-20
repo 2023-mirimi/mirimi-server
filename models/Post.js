@@ -35,9 +35,11 @@ Post.getPost = (postID) => {
         conn.query(sql, postID,(err, row) => {
             if(err) {
                 reject(err);
-            } else {
-                resolve(row);
             }
+            conn.query('UPDATE posts SET post_views = post_views + 1 WHERE post_id = ?', postID, (err, row) => {
+                if(err) reject(err)
+                resolve(row);
+            })
         })
     })
 }
@@ -60,6 +62,14 @@ Post.addReply = (reply) => {
         conn.query(sql, [reply.post_id, reply.nickname, reply.reply_content, reply.reply_date], (err, res) => {
             if(err) reject(err);
             else resolve(res);
+        })
+    })
+}
+Post.getPostByCategory = (category) => {
+    return new Promise((resolve, reject) => {
+        let sql = 'SELECT * FROM posts WHERE category = ? ORDER BY upload_date DESC';
+        conn.query(sql, category, (err, rows) => {
+            resolve(rows);
         })
     })
 }

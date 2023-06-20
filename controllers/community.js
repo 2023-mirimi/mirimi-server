@@ -20,6 +20,7 @@ module.exports.addReply = async (req, res) => {
 
 module.exports.getPost = async (req, res) => {
     try {
+        //댓글과 게시글 가져오기 
         const postID = req.params.id;
         const post = await Post.getPost(postID);
         const reply = await Post.getReplyAll(postID);
@@ -59,5 +60,31 @@ module.exports.setPost = async (req, res) => {
     } catch (error) {
         console.log('커뮤니티 컨트롤러 에러 : ', error)
         res.status(401).json(error);    
+    }
+}
+
+module.exports.getPostByCategory = async (req, res) => {
+    try {
+        const param = req.params.category;
+        let category = '';
+
+        if(param == 'daily'){
+            category = '일상';
+        } else if(param == 'employment'){
+            category = '취업';
+        } else if(param == 'school'){
+            category = '학교';
+        } else if(param == 'contest') {
+            category = '공모전';
+        } else {
+            let rows = await Post.getAll();
+            res.status(200).json(rows);
+            return;
+        }
+        let rows = await Post.getPostByCategory(category);
+        console.log(rows[0]);
+        res.status(200).json(rows);
+    } catch (error) {
+        res.status(500).json(error);
     }
 }
