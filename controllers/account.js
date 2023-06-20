@@ -1,4 +1,15 @@
 const User = require('../models/User');
+const multer = require('multer');
+const { Upload } = require("@aws-sdk/lib-storage");
+const { S3Client } = require("@aws-sdk/client-s3");
+const upload = multer({ storage: multer.memoryStorage() });
+const client = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+  });
 
 module.exports.login = async (req, res) => {
     try {
@@ -28,5 +39,28 @@ module.exports.getUser = async (req, res) => {
         res.json(user);
     } catch (error) {
         console.log('유저 정보 가져오기 실패 -> ', error);
+    }
+}
+
+module.exports.editUser = async (req, res) => {
+    try {
+        const nickname = req.body.nickname;
+        const userId = req.session.user.user_id;
+        const img = req.body.file;
+        const upload = new Upload({
+            client: client,
+            params: {
+              Bucket: process.env.AWS_BUCKET,
+              Key: `profile/user_${userId}.png`,
+              Body: file.buffer,
+              ContentType: file.mimetype,
+            },
+        });
+        upload.done();
+        let img_url = `https://s3.amazonaws.com/${process.env.AWS_BUCKET}/profile/user_${userId}.png`;
+        res.status(200).send({ message: "ok" })
+
+    } catch (error) {
+        res.json(error);
     }
 }
