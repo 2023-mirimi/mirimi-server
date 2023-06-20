@@ -33,7 +33,7 @@ User.login = async (email, pw) => {
 User.updateUser = async (userId, nickname, url) => {
     return new Promise((resolve, reject) => {
         let sql = 'UPDATE users SET nickname = ? , img WHERE user_id = ?';
-        connection.query(sql, [userId, nickname, url], (err, res) => {
+        connection.query(sql, [nickname, url, userId], (err, res) => {
             if(err) { 
                 reject(err);
             }else{
