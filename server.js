@@ -32,6 +32,10 @@ app.set('port', process.env.port);
 app.use('/account', accountRouter);
 app.use('/community', communityRouter);
 
+app.get('/', (req, res) => {
+  res.send("Hello Mirimi");
+})
+
 app.listen(app.get('port'), () => {
   console.log("Start Sever : localhost:",app.get('port'));
 });
