@@ -34,12 +34,16 @@ Post.getPost = (postID) => {
         let sql = 'SELECT * FROM posts WHERE post_id = ?';
         conn.query(sql, postID,(err, row) => {
             if(err) {
+                console.log(err);
                 reject(err);
+            } else {
+                conn.query('UPDATE posts SET post_views = post_views + 1 WHERE post_id = ?', postID, (err, row) => {
+                    if(err) reject(err)
+                    // else resolve(row);
+                })
+                resolve(row)
             }
-            conn.query('UPDATE posts SET post_views = post_views + 1 WHERE post_id = ?', postID, (err, row) => {
-                if(err) reject(err)
-                resolve(row);
-            })
+            
         })
     })
 }

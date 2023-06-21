@@ -47,6 +47,7 @@ module.exports.editUser = async (req, res) => {
         const nickname = req.body.nickname;
         const img = req.file;
         const userId = req.session.user.user_id;
+
         const upload = new Upload({
             client: client,
             params: {
@@ -63,8 +64,9 @@ module.exports.editUser = async (req, res) => {
         await User.updateUser(userId, nickname, img_url)
             .then(row => {
                 //유저정보 리턴
-                req.session.user = row[0];
-                req.session.save();
+                req.session.user.regenerate(row[0])
+                // req.session.save();
+                console.log(row[0])
                 res.status(200).json(row[0]);
             }).catch(err => {
                 res.status(500).json(err);

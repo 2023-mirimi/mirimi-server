@@ -21,13 +21,20 @@ module.exports.addReply = async (req, res) => {
 module.exports.getPost = async (req, res) => {
     try {
         //댓글과 게시글 가져오기 
-        const postID = req.params.id;
         const post = await Post.getPost(postID);
-        const reply = await Post.getReplyAll(postID);
         // console.log(reply);
-        res.json({post: post, reply: reply});
+        res.json(post);
     } catch (error) {
         console.log('커뮤니티 컨트롤러: ', error);
+    }
+}
+module.exports.getReply = async (req, res) => {
+    try {
+        const postID = req.params.id;
+        const reply = await Post.getReplyAll(postID);
+        res.json(reply);
+    } catch (error) {
+        console.log('커뮤니티 컨트롤러(getReply 에러)', error);
     }
 }
 
