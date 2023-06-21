@@ -4,11 +4,15 @@ module.exports.addReply = async (req, res) => {
     try {
         const postID = req.params.id;
         const reply = req.body.replyValue;
+        const date = new Date();
+        const url = 'https://mirimibucket.s3.ap-northeast-2.amazonaws.com/profile/profile.png';
+        const replyDate = `${date.getFullYear()}.${date.getMonth()+1}.${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
         const data = {
             post_id: postID,
             nickname: req.session.user.nickname,
             reply_content: reply,
-            reply_date: new Date().toLocaleString()
+            reply_date: replyDate,
+            reply_profile: url,
         }
         console.log(data);
         const result = await Post.addReply(data);
@@ -21,9 +25,10 @@ module.exports.addReply = async (req, res) => {
 module.exports.getPost = async (req, res) => {
     try {
         //댓글과 게시글 가져오기 
+        const postID = req.params.id;
         const post = await Post.getPost(postID);
         // console.log(reply);
-        res.json(post);
+        res.json(post[0]);
     } catch (error) {
         console.log('커뮤니티 컨트롤러: ', error);
     }
@@ -83,13 +88,8 @@ module.exports.getPostByCategory = async (req, res) => {
             category = '학교';
         } else if(param == 'contest') {
             category = '공모전';
-        } else {
-            let rows = await Post.getAll();
-            res.status(200).json(rows);
-            return;
         }
         let rows = await Post.getPostByCategory(category);
-        console.log(rows[0]);
         res.status(200).json(rows);
     } catch (error) {
         res.status(500).json(error);
