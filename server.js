@@ -27,7 +27,7 @@ app.use(session({
   saveUninitialized: true
 }))
 
-app.set('port', process.env.port);
+app.set('port', process.env.PORT);
 
 app.use('/account', accountRouter);
 app.use('/community', communityRouter);
